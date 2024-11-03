@@ -15,6 +15,12 @@ repositories {
         name = "BlameJared maven"
         url = "https://maven.blamejared.com/"
     }
+    repositories {
+        maven {
+            name = "TerraformersMC"
+            url = "https://maven.terraformersmc.com/"
+        }
+    }
 }
 
 base {
@@ -103,6 +109,8 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 dependencies {
     compileOnly("mezz.jei:jei-1.21.1-neoforge-api:${jei_version}")
     runtimeOnly("mezz.jei:jei-1.21.1-neoforge:${jei_version}")
+    compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
+    //runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

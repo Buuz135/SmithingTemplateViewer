@@ -3,7 +3,6 @@ package com.buuz135.smithingtemplateviewer.jei;
 
 import com.buuz135.smithingtemplateviewer.SmithingTemplateViewer;
 import com.buuz135.smithingtemplateviewer.SmithingTrimWrapper;
-import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -24,13 +23,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.SmithingTemplateItem;
-import net.minecraft.world.item.crafting.SmithingTrimRecipe;
 import net.neoforged.neoforge.common.util.TriPredicate;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-public class SmithingViewerCategory implements IRecipeCategory<SmithingTrimWrapper> {
+public class JEISmithingViewerCategory implements IRecipeCategory<SmithingTrimWrapper> {
     @Override
     public RecipeType<SmithingTrimWrapper> getRecipeType() {
         return JEIPlugin.RECIPE_TYPE;
