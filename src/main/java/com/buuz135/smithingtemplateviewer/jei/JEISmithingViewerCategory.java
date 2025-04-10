@@ -1,6 +1,7 @@
 package com.buuz135.smithingtemplateviewer.jei;
 
 
+import com.buuz135.smithingtemplateviewer.Config;
 import com.buuz135.smithingtemplateviewer.SmithingTemplateViewer;
 import com.buuz135.smithingtemplateviewer.SmithingTrimWrapper;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -19,10 +20,14 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SmithingTemplateItem;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.util.TriPredicate;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
@@ -58,7 +63,13 @@ public class JEISmithingViewerCategory implements IRecipeCategory<SmithingTrimWr
     public void setRecipe(IRecipeLayoutBuilder builder, SmithingTrimWrapper recipe, IFocusGroup focuses) {
         builder.addInputSlot(1,1).addIngredients(recipe.getRecipe().template);
         builder.addInputSlot(1,1+18).addIngredients(recipe.getRecipe().base);
-        builder.addInputSlot(1,1+18*2).addIngredients(recipe.getRecipe().addition);
+        if(Config.CONFIG.displayMaterials.get()) {
+            builder.addInputSlot(1, 1 + 18 * 2).addIngredients(recipe.getRecipe().addition);
+        } else {
+            ItemStack itemStack = Items.BARRIER.getDefaultInstance();
+            itemStack.set(DataComponents.ITEM_NAME, Component.literal("Use any item!"));
+            builder.addInputSlot(1, 1 + 18 * 2).addIngredients(Ingredient.of(itemStack));
+        }
     }
 
     @Override
