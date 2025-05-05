@@ -1,5 +1,6 @@
 package com.buuz135.smithingtemplateviewer.emi;
 
+import com.buuz135.smithingtemplateviewer.Config;
 import com.buuz135.smithingtemplateviewer.SmithingTemplateViewer;
 import com.buuz135.smithingtemplateviewer.SmithingTrimWrapper;
 import dev.emi.emi.api.recipe.EmiRecipe;
@@ -7,20 +8,26 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
-import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.component.PatchedDataComponentMap;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.DyeColor;
+import net.minecraft.util.datafix.ComponentDataFixUtils;
+import net.minecraft.util.datafix.fixes.ItemCustomNameToComponentFix;
+import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SmithingTemplateItem;
-import org.apache.commons.lang3.tuple.Pair;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.neoforged.neoforge.common.util.DataComponentUtil;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import java.awt.*;
 import java.util.List;
 
 public class EMISmithingViewerRecipe implements EmiRecipe {
@@ -45,7 +52,13 @@ public class EMISmithingViewerRecipe implements EmiRecipe {
 
     @Override
     public List<EmiIngredient> getInputs() {
-        return List.of(EmiIngredient.of(wrapper.getRecipe().template), EmiIngredient.of(wrapper.getRecipe().base), EmiIngredient.of(wrapper.getRecipe().addition));
+        if(Config.CONFIG.displayMaterials.get()) {
+            return List.of(EmiIngredient.of(wrapper.getRecipe().template), EmiIngredient.of(wrapper.getRecipe().base), EmiIngredient.of(wrapper.getRecipe().addition));
+        }
+        ItemStack itemStack = Items.BARRIER.getDefaultInstance();
+        itemStack.set(DataComponents.ITEM_NAME, Component.literal("Use any item!"));
+        return List.of(EmiIngredient.of(wrapper.getRecipe().template), EmiIngredient.of(wrapper.getRecipe().base), EmiIngredient.of(Ingredient.of(itemStack)));
+        
     }
 
     @Override
