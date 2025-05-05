@@ -20,6 +20,7 @@ public class STVEmiPlugin implements EmiPlugin {
     public void register(EmiRegistry registry) {
         registry.addCategory(CATEGORY);
         registry.addWorkstation(CATEGORY, EmiIngredient.of(Ingredient.of(Items.SMITHING_TABLE)));
+        SmithingTrimWrapper.INSTANCES.clear();
         for (RecipeHolder<?> recipe : registry.getRecipeManager().getAllRecipesFor(RecipeType.SMITHING)) {
             if (recipe.value() instanceof SmithingTrimRecipe trimRecipe){
                 registry.addRecipe(new EMISmithingViewerRecipe(recipe.id(), new SmithingTrimWrapper(trimRecipe)));

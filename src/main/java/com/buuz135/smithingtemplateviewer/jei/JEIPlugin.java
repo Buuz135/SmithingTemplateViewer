@@ -32,6 +32,7 @@ public class JEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
+        SmithingTrimWrapper.INSTANCES.clear();
         IModPlugin.super.registerRecipes(registration);
         var recipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(net.minecraft.world.item.crafting.RecipeType.SMITHING).stream().map(smithingRecipeRecipeHolder -> smithingRecipeRecipeHolder.value())
                 .filter(smithingRecipe -> smithingRecipe instanceof SmithingTrimRecipe).map(smithingRecipe -> new SmithingTrimWrapper((SmithingTrimRecipe) smithingRecipe)).toList();

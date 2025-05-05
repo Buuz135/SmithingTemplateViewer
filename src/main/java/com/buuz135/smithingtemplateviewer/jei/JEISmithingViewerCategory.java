@@ -85,7 +85,6 @@ public class JEISmithingViewerCategory implements IRecipeCategory<SmithingTrimWr
             guiGraphics.drawString(Minecraft.getInstance().font, templateItem.upgradeDescription.copy().withStyle(ChatFormatting.DARK_GRAY), 20,5, 0xFFFFFF, false);
         }
 
-
         var inventory = ResourceLocation.withDefaultNamespace("textures/gui/container/inventory.png");
         var buttons = ResourceLocation.fromNamespaceAndPath(SmithingTemplateViewer.MODID, "textures/gui/buttons.png");
         guiGraphics.blit(inventory, armorStandX - 25, armorStandY - 57, 25,7,51,72);
@@ -123,7 +122,6 @@ public class JEISmithingViewerCategory implements IRecipeCategory<SmithingTrimWr
         var armorStandX = 75;
         var armorStandY = 75;
         for (int i = 0; i < 4; i++) {
-            System.out.println(i);
             //LEFT
             int finalI = i;
             builder.addInputHandler(new ClickHandler<SmithingTrimWrapper>(new ScreenRectangle(armorStandX - 25 - 20, armorStandY - 57 + 2 + 18*i, 15,15), recipe, (mouseX, mouseY, iJeiUserInput) -> {

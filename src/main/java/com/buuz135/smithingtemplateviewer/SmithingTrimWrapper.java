@@ -7,11 +7,14 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.SmithingRecipeInput;
 import net.minecraft.world.item.crafting.SmithingTrimRecipe;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SmithingTrimWrapper {
+
+    public static final List<SmithingTrimWrapper> INSTANCES = new ArrayList<>();
 
     private SmithingTrimRecipe recipe;
     private ArmorStand armorStand;
@@ -21,13 +24,6 @@ public class SmithingTrimWrapper {
 
     public SmithingTrimWrapper(SmithingTrimRecipe recipe) {
         this.recipe = recipe;
-        this.armorStand = new ArmorStand(Minecraft.getInstance().level, 0.0, 0.0, 0.0);
-        this.armorStand.setNoBasePlate(true);
-        this.armorStand.setShowArms(true);
-        this.armorStand.yBodyRot = 210.0F;
-        this.armorStand.setXRot(25.0F);
-        this.armorStand.yHeadRot = this.armorStand.getYRot();
-        this.armorStand.yHeadRotO = this.armorStand.getYRot();
         this.armorIndex = new int[]{1,1,1,1};
         this.colorIndex = 0;
         this.armors = new ArrayList<>();
@@ -40,8 +36,19 @@ public class SmithingTrimWrapper {
                 this.armors.get(3-armorItem.getType().getSlot().getIndex()).add(item.copy());
             }
         }
-        this.updateArmorStand();
+        recreateArmorStand(Minecraft.getInstance().level);
+        INSTANCES.add(this);
     }
+
+    public void recreateArmorStand(Level level) {
+        this.armorStand = new ArmorStand(Minecraft.getInstance().level, 0.0, 0.0, 0.0);
+        this.armorStand.setNoBasePlate(true);
+        this.armorStand.setShowArms(true);
+        this.armorStand.yBodyRot = 210.0F;
+        this.armorStand.setXRot(25.0F);
+        this.armorStand.yHeadRot = this.armorStand.getYRot();
+        this.armorStand.yHeadRotO = this.armorStand.getYRot();
+        this.updateArmorStand();}
 
     public SmithingTrimRecipe getRecipe() {
         return recipe;
