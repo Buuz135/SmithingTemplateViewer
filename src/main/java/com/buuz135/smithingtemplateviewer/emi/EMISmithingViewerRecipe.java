@@ -110,14 +110,14 @@ public class EMISmithingViewerRecipe implements EmiRecipe {
             widgets.addButton(armorStandX - 25 - 16, armorStandY - 57 + 4 + 18*i, 12, 12, 0, 0, () -> wrapper.getArmorIndex()[finalI] > 0, (mouseX, mouseY, button) -> {
                 if (wrapper.getArmorIndex()[finalI] > 0){
                     wrapper.getArmorIndex()[finalI]--;
-                    wrapper.updateArmorStand();
+                    wrapper.updateArmorStand(Minecraft.getInstance().level);
                 }
             });
             //RIGHT
             widgets.addButton(armorStandX + 25 + 4, armorStandY - 57 + 4 + 18*i, 12, 12, 12, 0, () -> wrapper.getArmorIndex()[finalI] < wrapper.getArmors().get(finalI).size(), (mouseX, mouseY, button) -> {
                 if (wrapper.getArmorIndex()[finalI] < wrapper.getArmors().get(finalI).size()){
                     wrapper.getArmorIndex()[finalI]++;
-                    wrapper.updateArmorStand();
+                    wrapper.updateArmorStand(Minecraft.getInstance().level);
                 }
             });
         }
@@ -125,14 +125,14 @@ public class EMISmithingViewerRecipe implements EmiRecipe {
         widgets.addButton(armorStandX - 22, armorStandY + 22, 12, 12, 0, 0, () -> wrapper.getColorIndex() > 0, (mouseX, mouseY, button) -> {
             if (wrapper.getColorIndex() > 0){
                 wrapper.setColorIndex(wrapper.getColorIndex() - 1);
-                wrapper.updateArmorStand();
+                wrapper.updateArmorStand(Minecraft.getInstance().level);
             }
         });
         //RIGHT
         widgets.addButton(armorStandX + 12 , armorStandY + 22, 12, 12, 12, 0, () -> wrapper.getColorIndex() < wrapper.getRecipe().addition.getItems().length - 1, (mouseX, mouseY, button) -> {
             if (wrapper.getColorIndex() < wrapper.getRecipe().addition.getItems().length -1){
                 wrapper.setColorIndex(wrapper.getColorIndex() + 1);
-                wrapper.updateArmorStand();
+                wrapper.updateArmorStand(Minecraft.getInstance().level);
             }
         });
 

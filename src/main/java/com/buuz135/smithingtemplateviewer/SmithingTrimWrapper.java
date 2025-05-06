@@ -48,7 +48,8 @@ public class SmithingTrimWrapper {
         this.armorStand.setXRot(25.0F);
         this.armorStand.yHeadRot = this.armorStand.getYRot();
         this.armorStand.yHeadRotO = this.armorStand.getYRot();
-        this.updateArmorStand();}
+        this.updateArmorStand(level);
+    }
 
     public SmithingTrimRecipe getRecipe() {
         return recipe;
@@ -74,13 +75,13 @@ public class SmithingTrimWrapper {
         return armors;
     }
 
-    public void updateArmorStand() {
+    public void updateArmorStand(Level level) {
         var slots = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
         for (int i = 0; i < 4; i++) {
             var index = this.armorIndex[i];
             if (index != 0){
                 var stack = this.getArmors().get(i).get(index - 1);
-                stack = recipe.assemble(new SmithingRecipeInput(recipe.template.getItems()[0].copy(), stack.copy(), recipe.addition.getItems()[getColorIndex()]), Minecraft.getInstance().level.registryAccess());
+                stack = recipe.assemble(new SmithingRecipeInput(recipe.template.getItems()[0].copy(), stack.copy(), recipe.addition.getItems()[getColorIndex()]), level.registryAccess());
                 this.armorStand.setItemSlot(slots[i], stack.copy());
             } else {
                 this.armorStand.setItemSlot(slots[i], ItemStack.EMPTY);

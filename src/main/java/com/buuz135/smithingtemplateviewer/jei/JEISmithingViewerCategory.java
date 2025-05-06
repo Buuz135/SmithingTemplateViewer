@@ -128,7 +128,7 @@ public class JEISmithingViewerCategory implements IRecipeCategory<SmithingTrimWr
                 if (recipe.getArmorIndex()[finalI] > 0) {
                     --recipe.getArmorIndex()[finalI];
                     Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                    recipe.updateArmorStand();
+                    recipe.updateArmorStand(Minecraft.getInstance().level);
                     return true;
                 }
                 return false;
@@ -138,7 +138,7 @@ public class JEISmithingViewerCategory implements IRecipeCategory<SmithingTrimWr
                 if (recipe.getArmorIndex()[finalI] < recipe.getArmors().get(finalI).size()) {
                     ++recipe.getArmorIndex()[finalI];
                     Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                    recipe.updateArmorStand();
+                    recipe.updateArmorStand(Minecraft.getInstance().level);
                     return true;
                 }
                 return false;
@@ -149,7 +149,7 @@ public class JEISmithingViewerCategory implements IRecipeCategory<SmithingTrimWr
             if (recipe.getColorIndex() > 0) {
                 recipe.setColorIndex(recipe.getColorIndex() - 1);
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                recipe.updateArmorStand();
+                recipe.updateArmorStand(Minecraft.getInstance().level);
                 return true;
             }
             return false;
@@ -159,7 +159,7 @@ public class JEISmithingViewerCategory implements IRecipeCategory<SmithingTrimWr
             if (recipe.getColorIndex() < recipe.getRecipe().addition.getItems().length - 1) {
                 recipe.setColorIndex(recipe.getColorIndex() + 1);
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                recipe.updateArmorStand();
+                recipe.updateArmorStand(Minecraft.getInstance().level);
                 return true;
             }
             return false;
