@@ -41,7 +41,7 @@ public class SmithingTrimWrapper {
     }
 
     public void recreateArmorStand(Level level) {
-        this.armorStand = new ArmorStand(Minecraft.getInstance().level, 0.0, 0.0, 0.0);
+        this.armorStand = new ArmorStand(level, 0.0, 0.0, 0.0);
         this.armorStand.setNoBasePlate(true);
         this.armorStand.setShowArms(true);
         this.armorStand.yBodyRot = 210.0F;
