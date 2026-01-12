@@ -13,7 +13,7 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.event.level.LevelEvent;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
-@Mod(SmithingTemplateViewer.MODID)
+@Mod(value = SmithingTemplateViewer.MODID, dist = Dist.CLIENT)
 public class SmithingTemplateViewer {
     // Define mod id in a common place for everything to reference
     public static final String MODID = "smithingtemplateviewer";
