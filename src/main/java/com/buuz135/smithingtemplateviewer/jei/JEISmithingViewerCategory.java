@@ -16,22 +16,20 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SmithingTemplateItem;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.util.TriPredicate;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 public class JEISmithingViewerCategory implements IRecipeCategory<SmithingTrimWrapper> {
     @Override
@@ -68,47 +66,48 @@ public class JEISmithingViewerCategory implements IRecipeCategory<SmithingTrimWr
         } else {
             ItemStack itemStack = Items.BARRIER.getDefaultInstance();
             itemStack.set(DataComponents.ITEM_NAME, Component.literal("Use any item!"));
-            builder.addInputSlot(1, 1 + 18 * 2).addIngredients(Ingredient.of(itemStack));
+            builder.addInputSlot(1, 1 + 18 * 2).addItemStack(itemStack);
         }
     }
 
     @Override
-    public void draw(SmithingTrimWrapper recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(SmithingTrimWrapper recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor guiGraphics, double mouseX, double mouseY) {
         var armorStandX = 75;
         var armorStandY = 75;
         IRecipeCategory.super.draw(recipe, recipeSlotsView, guiGraphics, mouseX, mouseY);
-        Vector3f ARMOR_STAND_TRANSLATION = new Vector3f();
-        Quaternionf ARMOR_STAND_ANGLE = new Quaternionf().rotationXYZ(0.43633232F, 0.0F, (float) Math.PI);
 
-        var template = recipe.getRecipe().template.getItems()[0];
+        var template = recipe.getTemplate();
         if (template.getItem() instanceof SmithingTemplateItem templateItem){
-            guiGraphics.drawString(Minecraft.getInstance().font, templateItem.upgradeDescription.copy().withStyle(ChatFormatting.DARK_GRAY), 20,5, 0xFFFFFF, false);
+            guiGraphics.text(Minecraft.getInstance().font, Component.translatable("item.minecraft.smithing_template.upgrade").withStyle(ChatFormatting.DARK_GRAY), 20,5, 0xFFFFFF, false);
         }
 
-        var inventory = ResourceLocation.withDefaultNamespace("textures/gui/container/inventory.png");
-        var buttons = ResourceLocation.fromNamespaceAndPath(SmithingTemplateViewer.MODID, "textures/gui/buttons.png");
-        guiGraphics.blit(inventory, armorStandX - 25, armorStandY - 57, 25,7,51,72);
+        var inventory = Identifier.withDefaultNamespace("textures/gui/container/inventory.png");
+        var buttons = Identifier.fromNamespaceAndPath(SmithingTemplateViewer.MODID, "textures/gui/buttons.png");
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, inventory, armorStandX - 25, armorStandY - 57, 25,7,51,72, 256, 256);
         //SLOTS
-        guiGraphics.blit(inventory, 0,0, 7,83,18,18);
-        guiGraphics.blit(inventory, 0,18, 7,83,18,18);
-        guiGraphics.blit(inventory, 0,18*2, 7,83,18,18);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, inventory, 0,0, 7,83,18,18, 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, inventory, 0,18, 7,83,18,18, 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, inventory, 0,18*2, 7,83,18,18, 256, 256);
 
         for (int i = 0; i < 4; i++) {
             //LEFT
-            guiGraphics.blit(buttons, armorStandX - 25 - 20, armorStandY - 57 + 2 + 18*i, 17,56,15,15);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, buttons, armorStandX - 25 - 20, armorStandY - 57 + 2 + 18*i, 17,56,15,15, 256, 256);
             //RIGHT
-            guiGraphics.blit(buttons, armorStandX + 25 + 6, armorStandY - 57 + 2 + 18*i, 33,56,15,15);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, buttons, armorStandX + 25 + 6, armorStandY - 57 + 2 + 18*i, 33,56,15,15, 256, 256);
         }
         //LEFT
-        guiGraphics.blit(buttons, armorStandX - 24, armorStandY + 20, 17,56,15,15);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, buttons, armorStandX - 24, armorStandY + 20, 17,56,15,15, 256, 256);
         //RIGHT
-        guiGraphics.blit(buttons, armorStandX + 25 - 14, armorStandY + 20, 33,56,15,15);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, buttons, armorStandX + 25 - 14, armorStandY + 20, 33,56,15,15, 256, 256);
 
-        InventoryScreen.renderEntityInInventory(
-                guiGraphics, armorStandX, armorStandY, 25.0F, ARMOR_STAND_TRANSLATION, ARMOR_STAND_ANGLE, null, recipe.getArmorStand()
+        var entityBounds = new ScreenRectangle(armorStandX - 25, armorStandY - 57, 50, 72)
+                .transformAxisAligned(guiGraphics.pose());
+        InventoryScreen.renderEntityInInventoryFollowsAngle(
+                guiGraphics, entityBounds.left(), entityBounds.top(), entityBounds.right(), entityBounds.bottom(),
+                25, 0, 0, 0, recipe.getArmorStand()
         );
 
-        guiGraphics.renderItem(recipe.getRecipe().addition.getItems()[recipe.getColorIndex()], armorStandX - 24 + 17, armorStandY + 20);
+        guiGraphics.item(recipe.getAdditionItems().get(recipe.getColorIndex()), armorStandX - 24 + 17, armorStandY + 20);
     }
 
     @Override
@@ -156,7 +155,7 @@ public class JEISmithingViewerCategory implements IRecipeCategory<SmithingTrimWr
         }));
         //RIGHT
         builder.addInputHandler(new ClickHandler<SmithingTrimWrapper>(new ScreenRectangle( armorStandX + 25 - 14, armorStandY + 20, 15,15), recipe, (mouseX, mouseY, iJeiUserInput) -> {
-            if (recipe.getColorIndex() < recipe.getRecipe().addition.getItems().length - 1) {
+            if (recipe.getColorIndex() < recipe.getAdditionItems().size() - 1) {
                 recipe.setColorIndex(recipe.getColorIndex() + 1);
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 recipe.updateArmorStand(Minecraft.getInstance().level);
@@ -174,8 +173,8 @@ public class JEISmithingViewerCategory implements IRecipeCategory<SmithingTrimWr
         }
 
         public boolean handleInput(double mouseX, double mouseY, IJeiUserInput input) {
-            if (!input.isSimulate())return this.handleInput.test(mouseX, mouseY, input);
-            return false;
+            if (input.isSimulate()) return true;
+            return this.handleInput.test(mouseX, mouseY, input);
         }
 
         public ScreenRectangle area() {

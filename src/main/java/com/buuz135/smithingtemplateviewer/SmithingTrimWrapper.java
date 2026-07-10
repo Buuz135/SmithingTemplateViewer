@@ -1,12 +1,13 @@
 package com.buuz135.smithingtemplateviewer;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.SmithingRecipeInput;
 import net.minecraft.world.item.crafting.SmithingTrimRecipe;
+import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
@@ -31,9 +32,10 @@ public class SmithingTrimWrapper {
         this.armors.add(new ArrayList<>());
         this.armors.add(new ArrayList<>());
         this.armors.add(new ArrayList<>());
-        for (ItemStack item : this.recipe.base.getItems()) {
-            if (item.getItem() instanceof ArmorItem armorItem) {
-                this.armors.get(3-armorItem.getType().getSlot().getIndex()).add(item.copy());
+        for (ItemStack item : getItems(this.recipe.base)) {
+            Equippable equippable = item.get(DataComponents.EQUIPPABLE);
+            if (equippable != null && equippable.slot().getIndex() >= 0 && equippable.slot().getIndex() < 4) {
+                this.armors.get(3-equippable.slot().getIndex()).add(item.copy());
             }
         }
         recreateArmorStand(Minecraft.getInstance().level);
@@ -81,12 +83,24 @@ public class SmithingTrimWrapper {
             var index = this.armorIndex[i];
             if (index != 0){
                 var stack = this.getArmors().get(i).get(index - 1);
-                stack = recipe.assemble(new SmithingRecipeInput(recipe.template.getItems()[0].copy(), stack.copy(), recipe.addition.getItems()[getColorIndex()]), level.registryAccess());
+                stack = recipe.assemble(new SmithingRecipeInput(getTemplate(), stack.copy(), getAdditionItems().get(getColorIndex())));
                 this.armorStand.setItemSlot(slots[i], stack.copy());
             } else {
                 this.armorStand.setItemSlot(slots[i], ItemStack.EMPTY);
             }
 
         }
+    }
+
+    public ItemStack getTemplate() {
+        return getItems(this.recipe.template).getFirst();
+    }
+
+    public List<ItemStack> getAdditionItems() {
+        return getItems(this.recipe.addition);
+    }
+
+    private static List<ItemStack> getItems(net.minecraft.world.item.crafting.Ingredient ingredient) {
+        return ingredient.items().map(holder -> holder.value().getDefaultInstance()).toList();
     }
 }

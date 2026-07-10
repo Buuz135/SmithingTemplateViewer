@@ -9,9 +9,12 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.SmithingTrimRecipe;
+
+import java.util.List;
 
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
@@ -20,8 +23,8 @@ public class JEIPlugin implements IModPlugin {
     public static JEISmithingViewerCategory SMITHING_VIEWER_CATEGORY = new JEISmithingViewerCategory();
 
     @Override
-    public ResourceLocation getPluginUid() {
-        return ResourceLocation.fromNamespaceAndPath(SmithingTemplateViewer.MODID, "jei");
+    public Identifier getPluginUid() {
+        return Identifier.fromNamespaceAndPath(SmithingTemplateViewer.MODID, "jei");
     }
 
     @Override
@@ -34,7 +37,12 @@ public class JEIPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         SmithingTrimWrapper.INSTANCES.clear();
         IModPlugin.super.registerRecipes(registration);
-        var recipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(net.minecraft.world.item.crafting.RecipeType.SMITHING).stream().map(smithingRecipeRecipeHolder -> smithingRecipeRecipeHolder.value())
+        MinecraftServer server = Minecraft.getInstance().getSingleplayerServer();
+        if (server == null) {
+            registration.addRecipes(RECIPE_TYPE, List.of());
+            return;
+        }
+        var recipes = server.getRecipeManager().recipeMap().byType(net.minecraft.world.item.crafting.RecipeType.SMITHING).stream().map(smithingRecipeRecipeHolder -> smithingRecipeRecipeHolder.value())
                 .filter(smithingRecipe -> smithingRecipe instanceof SmithingTrimRecipe).map(smithingRecipe -> new SmithingTrimWrapper((SmithingTrimRecipe) smithingRecipe)).toList();
         registration.addRecipes(RECIPE_TYPE, recipes);
     }
